@@ -81,13 +81,15 @@ class documentosController extends Controller
     }
 
     public function descargarArchivo(Request $request){
-        $ruta=$request->input('ruta');
-        $file = storage_path()."\app\public/$ruta";
-        $headers = [
-          'Content-Type' => 'application/pdf',
-      ];
-      
-        return response()->download($file,'descargado.pdf',$headers);
+$ruta=$request->input('ruta');
+       $file = base_path()."/app/descarga (2).pdf";
+       $headers = [
+         'Content-Type' => 'application/pdf',
+    ];
+      //return base_path();
+       //
+       
+       return response()->download($file,'descargado.pdf',$headers);
       //if(!$this->downloadFile(app_path()."/files/prueba.pdf")){
       //return redirect()->back();
       //}

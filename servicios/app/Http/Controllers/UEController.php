@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class UEController extends Controller
 {
     public function probarRespuesta(){
-        return "Serviccios funcionando";
+        return base_path();
       }
     
     public function insertarUnidad(Request $request){
