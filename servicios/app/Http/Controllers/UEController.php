@@ -34,20 +34,20 @@ class UEController extends Controller
     }
 
     public function getUnidades(){
-        function getImagenes($tareas){
+        function getImagenes($unidades){
             $array=[];
-            foreach($tareas as $tareas){
-               $object = (object)['ID' => $tareas->ID, 'URL' => asset('storage/'.$tareas->RUTA_LOGO),'NOMBRE' => $tareas->NOMBRE,
-               'DIRECCION' => $tareas->DIRECCION];
+            foreach($unidades as $unidades){
+               $object = (object)['ID' => $unidades->ID, 'URL' => asset('storage/'.$unidades->RUTA_LOGO),'NOMBRE' => $unidades->NOMBRE,
+               'DIRECCION' => $unidades->DIRECCION];
                array_push($array, $object);
             }
             return $array;
         }
-       $tareas = unidadEducativa::all();
+       $unidades = unidadEducativa::all();
         return response()->json(
             [
-                //'unidades' => $tareas,
-                'unidades' => getImagenes($tareas),
+                //'unidades' => $unidades,
+                'unidades' => getImagenes($unidades),
                 'HttpResponse' => [
                     'status' => 200,
                     'statusText' => 'OK',

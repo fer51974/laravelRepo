@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\documentacion;
 use App\Models\detalleDocumentacion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class documentosController extends Controller
 {
@@ -81,17 +82,57 @@ class documentosController extends Controller
     }
 
     public function descargarArchivo(Request $request){
-$ruta=$request->input('ruta');
-       $file = base_path()."/app/descarga (2).pdf";
-       $headers = [
-         'Content-Type' => 'application/pdf',
-    ];
-      //return base_path();
-       //
-       
-       return response()->download($file,'descargado.pdf',$headers);
-      //if(!$this->downloadFile(app_path()."/files/prueba.pdf")){
-      //return redirect()->back();
-      //}
+        $ruta=$request->input('ruta');
+        $formato=$request->input('formato');
+        $nombre=$request->input('nombre');
+        $file = storage_path()."\app\public/$ruta";
+        $headers = [
+          'Content-Type' => $formato,
+         ];     
+       return response()->download($file,$nombre,$headers);
+      }
+
+      public function eliminarArchivo(Request $request){
+        $nombre=$request->input('nombre'); 
+        $ruta=$request->input('ruta'); 
+
+        $archivo = detalleDocumentacion::where('RUTA_ARCHIVO', '=', $ruta);
+
+        if (!$archivo) {
+            return response()->json([
+                'HttpResponse' => [
+                    'tittle' => 'Error',
+                    'message' => 'No se encontro el archivo!',
+                    'status' => 400,
+                    'statusText' => 'error',
+                    'ok' => true
+                ]
+            ]);
+        }
+        try {
+            Storage::disk('public')->delete($ruta);
+            $archivo->delete();
+
+            return response()->json([
+                'HttpResponse' => [
+                    'tittle' => 'Correcto',
+                    'message' => 'Archivo eliminado!',
+                    'status' => 200,
+                    'statusText' => 'success',
+                    'ok' => true
+                ],
+            ]);
+        } catch (Exception $e) {
+
+            return response()->json([
+                'HttpResponse' => [
+                    'tittle' => 'Error',
+                    'message' => 'Algo salio mal, intende nuevamente!',
+                    'status' => 400,
+                    'statusText' => 'error',
+                    'ok' => true
+                ]
+            ]);
+        }
       }
 }

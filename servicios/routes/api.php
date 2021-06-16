@@ -31,10 +31,11 @@ Route::get('getLectivos/{id}',[LectivoController::class,"getLectivos"]);
 //documentacion
 Route::get('getDocs/{id}',[documentosController::class,"getDocumentacionbyLectivo"]);
 
-//documentos
+//archivos
 Route::post('subirArchivo',[documentosController::class,"subirArchivo"]);
 Route::get('getArchivos/{id}',[documentosController::class,"getArchivosbyDoc"]);
 Route::get('descargarArchivo',[documentosController::class,'descargarArchivo']);
+Route::get('deleteArchivo',[documentosController::class,'eliminarArchivo']);
 
 
 
