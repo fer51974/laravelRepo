@@ -30,12 +30,17 @@ Route::get('getLectivos/{id}',[LectivoController::class,"getLectivos"]);
 
 //documentacion
 Route::get('getDocs/{id}',[documentosController::class,"getDocumentacionbyLectivo"]);
+Route::post('insertarCarpeta',[documentosController::class,"insertarCarpeta"]);
+Route::delete('eliminarCarpeta/{id}',[documentosController::class,"eliminarCarpeta2"]);
+
+
+
 
 //archivos
 Route::post('subirArchivo',[documentosController::class,"subirArchivo"]);
 Route::get('getArchivos/{id}',[documentosController::class,"getArchivosbyDoc"]);
 Route::get('descargarArchivo',[documentosController::class,'descargarArchivo']);
-Route::get('deleteArchivo',[documentosController::class,'eliminarArchivo']);
+Route::post('postborrarArchivo',[documentosController::class,'eliminarArchivo']);
 
 
 
