@@ -25,13 +25,21 @@ Route::get('probar',[UEController::class,"probarRespuesta"]);
 Route::post('insertarUnidad',[UEController::class,"insertarUnidad"]);
 Route::get('getUnidades',[UEController::class,"getUnidades"]);
 
+Route::post('probando',[UEController::class,"prueba2"]);
+
 //años lectivos
 Route::get('getLectivos/{id}',[LectivoController::class,"getLectivos"]);
+Route::post('insertarLectivo',[LectivoController::class,"insertarLectivo"]);
+Route::post('insertarLectivo',[LectivoController::class,"insertarLectivo"]);
+Route::post('eliminarLectivo',[LectivoController::class,"eliminarLectivo"]);
 
 //documentacion
 Route::get('getDocs/{id}',[documentosController::class,"getDocumentacionbyLectivo"]);
 Route::post('insertarCarpeta',[documentosController::class,"insertarCarpeta"]);
-Route::delete('eliminarCarpeta/{id}',[documentosController::class,"eliminarCarpeta2"]);
+Route::post('eliminarCarpeta',[documentosController::class,"eliminarCarpeta2"]);
+Route::put('cambiar',[documentosController::class,"cambiar"]);
+
+
 
 
 
@@ -40,7 +48,8 @@ Route::delete('eliminarCarpeta/{id}',[documentosController::class,"eliminarCarpe
 Route::post('subirArchivo',[documentosController::class,"subirArchivo"]);
 Route::get('getArchivos/{id}',[documentosController::class,"getArchivosbyDoc"]);
 Route::get('descargarArchivo',[documentosController::class,'descargarArchivo']);
-Route::post('postborrarArchivo',[documentosController::class,'eliminarArchivo']);
+Route::post('borrarArchivo',[documentosController::class,'eliminarArchivo2']);
+
 
 
 

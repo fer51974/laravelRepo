@@ -2,13 +2,34 @@
 
 namespace App\Http\Controllers;
 use App\Models\unidadEducativa;
+use App\Models\lectivo;
+use App\Models\detalleDocumentacion;
+use App\Models\documentacion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UEController extends Controller
 {
     public function probarRespuesta(){
         return base_path();
       }
+      ///
+      public function prueba(Request $request){
+       // Storage::disk('public')->makeDirectory('archNombres');
+       //Storage::makeDirectory('public/archNombres3');
+       Storage::deleteDirectory('public/archNombres3');
+        return "borrado";
+    }
+    public function prueba2(Request $request){
+        $idLectivo=$request->input('idLectivo');
+        $nombres = unidadEducativa::where('anio_lectivo.ID','=',$idLectivo)
+        ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
+        ->select('unidad_educativa.NOMBRE as nombreUnidad','anio_lectivo.NOMBRE as nombreLectivo')
+        ->first();
+        return $nombres;
+         
+    }
+      ///
     
     public function insertarUnidad(Request $request){
         $unidad = new unidadEducativa();
@@ -18,6 +39,7 @@ class UEController extends Controller
         $ruta=$archivo->storeAs('unidadesEducativas/logos', $unidad->nombre . '.' . $archivo->getClientOriginalExtension(), 'public');
         $unidad->ruta_logo=$ruta;
         $unidad->save();
+        Storage::makeDirectory('public/unidadesEducativas/'.$nombres->nombreUnidad);
         return response()->json(
             [
                 'Unidad Educativa' => $unidad,
