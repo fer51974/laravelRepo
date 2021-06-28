@@ -17,29 +17,40 @@ class UEController extends Controller
       public function prueba(Request $request){
        // Storage::disk('public')->makeDirectory('archNombres');
        //Storage::makeDirectory('public/archNombres3');
-       Storage::deleteDirectory('public/archNombres3');
-        return "borrado";
+      // Storage::deleteDirectory('public/archNombres3');
+       // return "borrado";
+       $idUnidad= $request->input('idUnidad');
+       $nombres = unidadEducativa::where('ID','=',$idUnidad)
+       ->select('unidad_educativa.NOMBRE as nombreUnidad')
+       ->get();  
+       return $nombres[0]->nombreUnidad;
+       
+
     }
     public function prueba2(Request $request){
-        $idLectivo=$request->input('idLectivo');
-        $nombres = unidadEducativa::where('anio_lectivo.ID','=',$idLectivo)
-        ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
-        ->select('unidad_educativa.NOMBRE as nombreUnidad','anio_lectivo.NOMBRE as nombreLectivo')
-        ->first();
-        return $nombres;
+        $idUnidad=$request->input('idUnidad');
+        $nombres = unidadEducativa::where('unidad_Educativa.ID','=',$idUnidad)
+        ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')     
+        ->select('unidad_educativa.NOMBRE as nombreUnidad')->first();
+        return $nombres->nombreUnidad;
          
     }
       ///
-    
+    ///insertar nueva unidad Educativa
     public function insertarUnidad(Request $request){
         $unidad = new unidadEducativa();
         $unidad->nombre= $request->input('nombre');
         $unidad->direccion= $request->input('direccion');
         $archivo=$request->file('archivo');
+        //comprobar si existe otra unidad educativa con ese nombre
+        $unidadExiste = unidadEducativa::where([
+            ['NOMBRE','=',$request->input('nombre')]])->get();  
+        if(count($unidadExiste)<1){
+        //si no hay unidades con ese nombre inserto
         $ruta=$archivo->storeAs('unidadesEducativas/logos', $unidad->nombre . '.' . $archivo->getClientOriginalExtension(), 'public');
         $unidad->ruta_logo=$ruta;
         $unidad->save();
-        Storage::makeDirectory('public/unidadesEducativas/'.$nombres->nombreUnidad);
+        Storage::makeDirectory('public/unidadesEducativas/'.$unidad->nombre);
         return response()->json(
             [
                 'Unidad Educativa' => $unidad,
@@ -51,10 +62,72 @@ class UEController extends Controller
                     'ok' => true
                 ],
             ],
-            201
+            
         );
+            }else{
+                return response()->json([
+                    'HttpResponse' => [
+                        'message' => 'Carpeta con nombre ya existente!: '.$request->input('nombre'),
+                        'status' => 400,
+                        'statusText' => 'error',
+                        'ok' => true
+                    ]
+                ]);
+            }
+
+    }
+    ///eliminar unidadEducativa
+    public function eliminarUnidad($idUnidad){
+        //$idUnidad= $request->input('idUnidad');
+        //obtengo el objeto de la base para eliminar
+        $unidad=unidadEducativa::where('ID','=',$idUnidad);
+        /// obtengo el nombre de la unidad
+        $nombres = unidadEducativa::where('ID','=',$idUnidad)
+        ->select('unidad_educativa.NOMBRE as nombreUnidad')
+        ->get();  
+        ///verifico que la unidad educativa no tenga anios lectivos
+        $count = lectivo::where('ID_Unidad_Educativa', '=', $idUnidad)->count();
+        if($count>=1){
+            return response()->json([
+                'HttpResponse' => [
+                    'tittle' => 'Error',
+                    'message' => 'No puede eliminar Unidades Edicativas con Años Lectivos!',
+                    'status' => 400,
+                    'statusText' => 'error',
+                    'ok' => true
+                ]
+            ]);
+        }else{
+            try {
+                Storage::deleteDirectory('public/unidadesEducativas/'.$nombres[0]->nombreUnidad);
+                 $unidad->delete();
+     
+                 return response()->json([
+                     'HttpResponse' => [
+                         'tittle' => 'Correcto',
+                         'message' => 'Unidad Educativa eliminada!',
+                         'status' => 200,
+                         'statusText' => 'success',
+                         'ok' => true
+                     ],
+                 ]);
+             } catch (Exception $e) {
+     
+                 return response()->json([
+                     'HttpResponse' => [
+                         'tittle' => 'Error',
+                         'message' => 'Algo salio mal, intende nuevamente!',
+                         'status' => 400,
+                         'statusText' => 'error',
+                         'ok' => true
+                     ]
+                 ]);
+             }
+        }
+
     }
 
+    ///obtener lista de unidades educativas 
     public function getUnidades(){
         function getImagenes($unidades){
             $array=[];
@@ -76,7 +149,6 @@ class UEController extends Controller
                     'ok' => true
                 ]
             ],
-            201
         );
     }
 }

@@ -45,23 +45,25 @@ class LectivoController extends Controller
     public function insertarLectivo(Request $request){
         $idUnidad=$request->input('idUnidad');
         $nuevoNombre= $request->input('nombreLectivo');
+        $nombreUnidad=$request->input('nombreUnidad');
         ///comprobar si hay un lectivo con ese nombre en la unidad eeducativa
         $lectivoExiste = lectivo::where([
             ['ID_UNIDAD_EDUCATIVA', '=', $idUnidad],
             ['NOMBRE','=',$nuevoNombre]])->get();  
+
+        if(count($lectivoExiste)<1){
         ///obtener el nombre de la unidad
         $nombres = unidadEducativa::where('unidad_Educativa.ID','=',$idUnidad)
         ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')     
         ->select('unidad_educativa.NOMBRE as nombreUnidad')
         ->first();
         ///
-        if(count($lectivoExiste)<1){
         $lectivo = new lectivo();
         $lectivo->nombre=$request->input('nombreLectivo');
         $lectivo->id_unidad_educativa=$request->input('idUnidad');
         $lectivo->save();
         //crear la carpeta en el disco
-        Storage::makeDirectory('public/unidadesEducativas/'.$nombres->nombreUnidad.'/Documentos/'.$nuevoNombre);
+        Storage::makeDirectory('public/unidadesEducativas/'.$nombreUnidad.'/Documentos/'.$nuevoNombre);
 
         return response()->json([
             'HttpResponse' => [    

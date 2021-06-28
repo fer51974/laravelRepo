@@ -82,7 +82,7 @@ class documentosController extends Controller
                             'ok' => true
                         ],
                     ],
-                    201
+                  
                 );
             }else{
                 return response()->json([

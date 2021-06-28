@@ -24,7 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('probar',[UEController::class,"probarRespuesta"]);
 Route::post('insertarUnidad',[UEController::class,"insertarUnidad"]);
 Route::get('getUnidades',[UEController::class,"getUnidades"]);
-
+Route::delete('eliminarUnidad/{id}',[UEController::class,"eliminarUnidad"]);
 Route::post('probando',[UEController::class,"prueba2"]);
 
 //años lectivos
