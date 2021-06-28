@@ -145,4 +145,57 @@ class LectivoController extends Controller
         }
         
     }
+    //editart anio lectivo
+    public function editarLectivo(Request $request){
+        $idLectivo= $request->input('idLectivo');
+        $nuevoNombre= $request->input('nombreLectivo');
+        ///comprobar si no existe otro lectivo con ese nombre
+        $lectivoExiste = lectivo::where([
+            ['ID', '=', $idLectivo],
+            ['NOMBRE','=',$nuevoNombre]])->get();  
+            
+        if(count($lectivoExiste)<1){
+                    ///
+        $nombres = unidadEducativa::where('anio_lectivo.ID','=',$idLectivo)
+        ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
+        ->select('unidad_educativa.NOMBRE as nombreUnidad','anio_lectivo.NOMBRE as nombreLectivo')
+        ->first();
+        $lectivo=lectivo::where('ID','=',$idLectivo)
+        ->update(['NOMBRE'=>$nuevoNombre]);
+
+       
+            Storage::move('public/unidadesEducativas/'.$nombres->nombreUnidad.'/Documentos/'.$nombres->nombreLectivo, 
+            'public/unidadesEducativas/'.$nombres->nombreUnidad.'/Documentos/'.$nuevoNombre);
+
+
+
+        if(!$lectivo){
+            return "no existe el periodo";
+        }else{
+            return response()->json(
+                [
+                    'HttpResponse' => [
+                        'tittle' => 'Correcto',
+                        'message' => 'Año Lectivo Actualizado!',
+                        'status' => 200,
+                        'statusText' => 'success',
+                        'ok' => true
+                    ],
+                ],
+                201
+            );
+        }
+        }else{
+            return response()->json([
+                'HttpResponse' => [
+                    'message' => 'No se puede asignar este nombre!',
+                    'status' => 400,
+                    'statusText' => 'error',
+                    'ok' => true
+                ]
+            ]);
+        }
+
+
+    }
 }

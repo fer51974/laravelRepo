@@ -30,14 +30,15 @@ Route::post('probando',[UEController::class,"prueba2"]);
 //años lectivos
 Route::get('getLectivos/{id}',[LectivoController::class,"getLectivos"]);
 Route::post('insertarLectivo',[LectivoController::class,"insertarLectivo"]);
-Route::post('insertarLectivo',[LectivoController::class,"insertarLectivo"]);
 Route::post('eliminarLectivo',[LectivoController::class,"eliminarLectivo"]);
+Route::post('editarLectivo',[LectivoController::class,"editarLectivo"]);
 
 //documentacion
 Route::get('getDocs/{id}',[documentosController::class,"getDocumentacionbyLectivo"]);
 Route::post('insertarCarpeta',[documentosController::class,"insertarCarpeta"]);
 Route::post('eliminarCarpeta',[documentosController::class,"eliminarCarpeta2"]);
 Route::put('cambiar',[documentosController::class,"cambiar"]);
+Route::post('editarCarpeta',[documentosController::class,"editarCarpeta"]);
 
 
 
