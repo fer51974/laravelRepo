@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UEController;
 use App\Http\Controllers\LectivoController;
 use App\Http\Controllers\documentosController;
+use App\Http\Controllers\nivelesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,17 +41,15 @@ Route::post('eliminarCarpeta',[documentosController::class,"eliminarCarpeta2"]);
 Route::put('cambiar',[documentosController::class,"cambiar"]);
 Route::post('editarCarpeta',[documentosController::class,"editarCarpeta"]);
 
-
-
-
-
-
 //archivos
 Route::post('subirArchivo',[documentosController::class,"subirArchivo"]);
 Route::get('getArchivos/{id}',[documentosController::class,"getArchivosbyDoc"]);
 Route::get('descargarArchivo',[documentosController::class,'descargarArchivo']);
 Route::post('borrarArchivo',[documentosController::class,'eliminarArchivo2']);
 
+//niveles
+Route::post('insertarNivel',[nivelesController::class,"insertarNivel"]);
+Route::get('getNiveles/{id}',[nivelesController::class,"getNiveles"]);
 
 
 
