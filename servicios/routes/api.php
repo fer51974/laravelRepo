@@ -57,7 +57,9 @@ Route::get('getParalelos/{id}',[paralelosController::class,"getParalelos"]);
 Route::post('subirArchivoParalelo',[paralelosController::class,"subirArchivo"]);
 Route::get('getArchivosParalelo/{id}',[paralelosController::class,"getArchivos"]);
 Route::get('descargarArchivoParalelo',[paralelosController::class,'descargarArchivo']);
-Route::get('pruebas/{id}',[paralelosController::class,"pruebas"]);
+Route::delete('borrarArchivoParalelo',[paralelosController::class,'borrarArchivo']);
+Route::get('pruebas',[paralelosController::class,"pruebas"]);
+
 
 
 

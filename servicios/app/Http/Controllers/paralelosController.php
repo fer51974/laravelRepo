@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 use App\Models\paralelo;
 use App\Models\unidadEducativa;
 use App\Models\detalleParalelo;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class paralelosController extends Controller
 {
     //pruebas
-    public function pruebas($idParalelo){
-        $nombres = unidadEducativa::where('paralelo.ID','=',$idParalelo)
-        ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
-        ->join('nivel','nivel.ID_ANIO_LECTIVO','=','anio_lectivo.ID') 
-        ->join('paralelo','paralelo.ID_NIVEL','=','nivel.ID')     
-        ->select('unidad_educativa.NOMBRE as nombreUnidad','paralelo.NOMBRE as nombreParalelo','nivel.NOMBRE as nombreNivel', 'anio_lectivo.NOMBRE as nombreLectivo')->first();
-        return $nombres->nombreUnidad;
+    public function pruebas(Request $request){
+        $idParalelo=$request->input('idParalelo');
+        $nombre=$request->input('nombre');
+        $tipoDocumento=$request->input('tipoDocumento');
+
+        $archivo = detalleParalelo::where([
+            ['NOMBRE_ARCHIVO', '=', $nombre],
+            ['ID_DOCUMENTO','=',$tipoDocumento],
+            ['ID_PARALELO','=',$idParalelo]
+            ])->get();
+            return $archivo;
     }
         //obtener los paralelos por nivel
         public function getParalelos($idNivel){
@@ -153,4 +157,67 @@ class paralelosController extends Controller
     
      }
      //eliminar Archivo
+     public function borrarArchivo(Request $request){
+        $idParalelo=$request->input('idParalelo');
+        $nombre=$request->input('nombre');
+        $tipoDocumento=$request->input('tipoDocumento');
+        if($request->input('tipoDocumento')==1){
+            $tipo="Boletas";
+        }else if($request->input('tipoDocumento')==2){
+            $tipo="Promociones";
+        }else{
+            $tipo="Concentrado";
+        }
+        ///GET para obtener los nombres de las carpetas
+         $nombres = unidadEducativa::where('paralelo.ID','=',$request->input('idParalelo'))
+        ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
+        ->join('nivel','nivel.ID_ANIO_LECTIVO','=','anio_lectivo.ID') 
+        ->join('paralelo','paralelo.ID_NIVEL','=','nivel.ID')     
+        ->select('unidad_educativa.NOMBRE as nombreUnidad','paralelo.NOMBRE as nombreParalelo','nivel.NOMBRE as nombreNivel', 
+        'anio_lectivo.NOMBRE as nombreLectivo')->first();
+
+        $ruta= 'unidadesEducativas/'.$nombres->nombreUnidad.'/'.$nombres->nombreLectivo.'/'.$nombres->nombreNivel.'/'.$nombres->nombreParalelo.'/'.$tipo.'/'.$nombre;
+        $archivo = detalleParalelo::where([
+            ['NOMBRE_ARCHIVO', '=', $nombre],
+            ['TIPO_DOCUMENTO','=',$tipoDocumento],
+            ['ID_PARALELO','=',$idParalelo]
+            ]);
+
+            if (!$archivo) {
+                return response()->json([
+                    'HttpResponse' => [
+                        'tittle' => 'Error',
+                        'message' => 'No se encontro el archivo!',
+                        'status' => 400,
+                        'statusText' => 'error',
+                        'ok' => true
+                    ]
+                ]);
+            }
+            try {
+                Storage::disk('public')->delete($ruta);
+                $archivo->delete();
+    
+                return response()->json([
+                    'HttpResponse' => [
+                        'tittle' => 'Correcto',
+                        'message' => 'Archivo eliminado!',
+                        'status' => 200,
+                        'statusText' => 'success',
+                        'ok' => true
+                    ],
+                ]);
+            } catch (Exception $e) {
+    
+                return response()->json([
+                    'HttpResponse' => [
+                        'tittle' => 'Error',
+                        'message' => 'Algo salio mal, intende nuevamente!',
+                        'status' => 400,
+                        'statusText' => 'error',
+                        'ok' => true
+                    ]
+                ]);
+            }
+     }
 }
