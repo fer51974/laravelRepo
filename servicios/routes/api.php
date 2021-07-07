@@ -6,6 +6,7 @@ use App\Http\Controllers\UEController;
 use App\Http\Controllers\LectivoController;
 use App\Http\Controllers\documentosController;
 use App\Http\Controllers\nivelesController;
+use App\Http\Controllers\paralelosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,13 @@ Route::post('borrarArchivo',[documentosController::class,'eliminarArchivo2']);
 //niveles
 Route::post('insertarNivel',[nivelesController::class,"insertarNivel"]);
 Route::get('getNiveles/{id}',[nivelesController::class,"getNiveles"]);
+
+//PARALELOS
+Route::get('getParalelos/{id}',[paralelosController::class,"getParalelos"]);
+Route::post('subirArchivoParalelo',[paralelosController::class,"subirArchivo"]);
+Route::get('getArchivosParalelo/{id}',[paralelosController::class,"getArchivos"]);
+Route::get('descargarArchivoParalelo',[paralelosController::class,'descargarArchivo']);
+Route::get('pruebas/{id}',[paralelosController::class,"pruebas"]);
 
 
 
