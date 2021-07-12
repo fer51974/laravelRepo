@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\lectivo;
+use App\Models\nivel;
 use App\Models\unidadEducativa;
 use App\Models\documentacion;
 use Illuminate\Http\Request;
@@ -62,9 +63,10 @@ class LectivoController extends Controller
         $lectivo->nombre=$request->input('nombreLectivo');
         $lectivo->id_unidad_educativa=$request->input('idUnidad');
         $lectivo->save();
-        //crear la carpeta en el disco
+        //crear la carpeta en el disco para documentos
         Storage::makeDirectory('public/unidadesEducativas/'.$nombreUnidad.'/Documentos/'.$nuevoNombre);
-
+        //crear la carpeta en el disco para boletas,con.prom
+        Storage::makeDirectory('public/unidadesEducativas/'.$nombreUnidad.'/BoletasConProm/'.$nuevoNombre);
         return response()->json([
             'HttpResponse' => [    
                 'message' => 'Año lectivo Creado!',
@@ -108,6 +110,8 @@ class LectivoController extends Controller
         ->first();
         ///comprobar si el anio lectivo tiene carpetas o documentos
         $count = documentacion::where('ID_ANIO_LECTIVO', '=', $idLectivo)->count();
+        //comprobar si el anio lectivo tiene algun nivel
+        $countNivel= nivel::where('ID_ANIO_LECTIVO', '=', $idLectivo)->count();
         if($count>=1){
             return response()->json([
                 'HttpResponse' => [
@@ -118,9 +122,20 @@ class LectivoController extends Controller
                     'ok' => true
                 ]
             ]);
+        }else if($countNivel>=1){
+            return response()->json([
+                'HttpResponse' => [
+                    'tittle' => 'Error',
+                    'message' => 'No puede eliminar Periodos con Niveles!',
+                    'status' => 400,
+                    'statusText' => 'error',
+                    'ok' => true
+                ]
+            ]);
         }else{
             try {
                 Storage::deleteDirectory('public/unidadesEducativas/'.$nombres->nombreUnidad.'/Documentos/'.$nombres->nombreLectivo);
+                Storage::deleteDirectory('public/unidadesEducativas/'.$nombres->nombreUnidad.'/BoletasConProm/'.$nombres->nombreLectivo);
                  $lectivo->delete();
      
                  return response()->json([
@@ -169,6 +184,8 @@ class LectivoController extends Controller
             Storage::move('public/unidadesEducativas/'.$nombres->nombreUnidad.'/Documentos/'.$nombres->nombreLectivo, 
             'public/unidadesEducativas/'.$nombres->nombreUnidad.'/Documentos/'.$nuevoNombre);
 
+            Storage::move('public/unidadesEducativas/'.$nombres->nombreUnidad.'/BoletasConProm/'.$nombres->nombreLectivo, 
+            'public/unidadesEducativas/'.$nombres->nombreUnidad.'/BoletasConProm/'.$nuevoNombre);
 
 
         if(!$lectivo){

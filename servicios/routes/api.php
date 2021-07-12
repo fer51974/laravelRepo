@@ -51,14 +51,22 @@ Route::post('borrarArchivo',[documentosController::class,'eliminarArchivo2']);
 //niveles
 Route::post('insertarNivel',[nivelesController::class,"insertarNivel"]);
 Route::get('getNiveles/{id}',[nivelesController::class,"getNiveles"]);
+Route::delete('borrarNivel/{id}',[nivelesController::class,"borrarNivel"]);
+Route::post('editarNivel',[nivelesController::class,"editarNivel"]);
 
 //PARALELOS
 Route::get('getParalelos/{id}',[paralelosController::class,"getParalelos"]);
+Route::post('subirParalelo',[paralelosController::class,"subirParalelo"]);
+Route::delete('borrarParalelo/{id}',[paralelosController::class,"borrarParalelo"]);
+Route::post('editarParalelo',[paralelosController::class,"editarParalelo"]);
+
+    //paralelos archivos
 Route::post('subirArchivoParalelo',[paralelosController::class,"subirArchivo"]);
 Route::get('getArchivosParalelo/{id}',[paralelosController::class,"getArchivos"]);
 Route::get('descargarArchivoParalelo',[paralelosController::class,'descargarArchivo']);
 Route::delete('borrarArchivoParalelo',[paralelosController::class,'borrarArchivo']);
-Route::get('pruebas',[paralelosController::class,"pruebas"]);
+
+Route::post('pruebas',[paralelosController::class,"pruebas"]);
 
 
 

@@ -67,7 +67,7 @@ class UEController extends Controller
             }else{
                 return response()->json([
                     'HttpResponse' => [
-                        'message' => 'Carpeta con nombre ya existente!: '.$request->input('nombre'),
+                        'message' => 'Unidad Educativa ya existente!: '.$request->input('nombre'),
                         'status' => 400,
                         'statusText' => 'error',
                         'ok' => true
@@ -100,6 +100,11 @@ class UEController extends Controller
         }else{
             try {
                 Storage::deleteDirectory('public/unidadesEducativas/'.$nombres[0]->nombreUnidad);
+                //elimino el logo de la unidad educativa
+                 $res=Storage::disk('public')->delete('unidadesEducativas/logos/'.$nombres[0]->nombreUnidad.'.png');
+                 if($res!=1){
+                    $res=Storage::disk('public')->delete('unidadesEducativas/logos/'.$nombres[0]->nombreUnidad.'.jpg');
+                 }
                  $unidad->delete();
      
                  return response()->json([
