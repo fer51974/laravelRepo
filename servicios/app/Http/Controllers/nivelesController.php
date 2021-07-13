@@ -29,7 +29,8 @@ class nivelesController extends Controller
         //verifico si no hay un nivel con ese nombre en esa jornada
         $existe=nivel::where([
         ['NOMBRE', '=', $request->input('nombreNivel')],
-        ['JORNADA','=',$request->input('jornada')]
+        ['JORNADA','=',$request->input('jornada')],
+        ['ID_ANIO_LECTIVO', '=', $request->input('idLectivo')]
         ])->get();
         if(count($existe)<1){
             //obtengo los nombres para las carpetas
@@ -125,12 +126,13 @@ class nivelesController extends Controller
          $nombres = unidadEducativa::where('nivel.ID','=',$idNivel)
         ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
         ->join('nivel','nivel.ID_ANIO_LECTIVO','=','anio_lectivo.ID')    
-        ->select('unidad_educativa.NOMBRE as nombreUnidad','nivel.JORNADA as jornada','nivel.NOMBRE as nombreNivel',
+        ->select('unidad_educativa.NOMBRE as nombreUnidad','anio_lectivo.ID as idlectivo','nivel.JORNADA as jornada','nivel.NOMBRE as nombreNivel',
         'anio_lectivo.NOMBRE as nombreLectivo')->first();
         //comprobar si no existe otro nivel con ese nombre
         $count = nivel::where([
             ['NOMBRE','=',$nombreNivel],
-            ['JORNADA','=',$nombres->jornada]])->count();  
+            ['JORNADA','=',$nombres->jornada],
+            ['ID_ANIO_LECTIVO', '=', $nombres->idlectivo]])->count();  
             if($count>=1){
                 return response()->json([
                     'HttpResponse' => [

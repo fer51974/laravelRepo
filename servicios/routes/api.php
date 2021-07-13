@@ -7,6 +7,8 @@ use App\Http\Controllers\LectivoController;
 use App\Http\Controllers\documentosController;
 use App\Http\Controllers\nivelesController;
 use App\Http\Controllers\paralelosController;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,16 @@ use App\Http\Controllers\paralelosController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+////usuarios
+Route::group([
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('login', [AuthController::class,"login"]);
+    Route::post('register', [AuthController::class,"register"]);
+    Route::post('logout', [AuthController::class,"logout"]);
+});
+
+
 ///unidades educativas services
 Route::get('probar',[UEController::class,"probarRespuesta"]);
 Route::post('insertarUnidad',[UEController::class,"insertarUnidad"]);
