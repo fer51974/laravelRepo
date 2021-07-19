@@ -156,4 +156,9 @@ class UEController extends Controller
             ],
         );
     }
+
+    public function getUnidad($id){
+        $unidad=unidadEducativa::find($id);
+        return $unidad;
+    }
 }

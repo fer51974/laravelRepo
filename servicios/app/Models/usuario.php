@@ -12,12 +12,14 @@ class usuario extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table='usuarios';
+    protected $table='users';
     protected $fillable = [
     'id',
+    'nombre',
+    'id_unidad_educativa',
     'email',
     'password',
-    'tipo'
+    'tipo_usuario'
     ];
     public function getJWTIdentifier()
     {

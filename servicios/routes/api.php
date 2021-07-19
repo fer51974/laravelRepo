@@ -8,6 +8,7 @@ use App\Http\Controllers\documentosController;
 use App\Http\Controllers\nivelesController;
 use App\Http\Controllers\paralelosController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\usuariosController;
 
 
 /*
@@ -28,16 +29,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group([
     'prefix' => 'auth'
 ], function ($router) {
-    Route::post('login', [AuthController::class,"login"]);
-    Route::post('register', [AuthController::class,"register"]);
+
     Route::post('logout', [AuthController::class,"logout"]);
 });
+
+Route::get('getRoles', [usuariosController::class,"getRoles"]);
+Route::post('insertarUsuario', [usuariosController::class,"insertarUsuario"]);
+Route::get('getUsuarios', [usuariosController::class,"getUsuarios"]);
+Route::post('ingresar', [AuthController::class,"login"]);
+Route::post('register', [AuthController::class,"register"]);
 
 
 ///unidades educativas services
 Route::get('probar',[UEController::class,"probarRespuesta"]);
 Route::post('insertarUnidad',[UEController::class,"insertarUnidad"]);
 Route::get('getUnidades',[UEController::class,"getUnidades"]);
+Route::get('getUnidad/{id}',[UEController::class,"getUnidad"]);
 Route::delete('eliminarUnidad/{id}',[UEController::class,"eliminarUnidad"]);
 Route::post('probando',[UEController::class,"prueba2"]);
 
