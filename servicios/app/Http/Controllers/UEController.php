@@ -159,6 +159,21 @@ class UEController extends Controller
 
     public function getUnidad($id){
         $unidad=unidadEducativa::find($id);
-        return $unidad;
+        function getImagenes($unidades){
+               $object = (object)['ID' => $unidades->ID, 'URL' => asset('storage/'.$unidades->RUTA_LOGO),'NOMBRE' => $unidades->NOMBRE,
+               'DIRECCION' => $unidades->DIRECCION];
+            return $object;
+        }
+        return response()->json(
+            [
+                //'unidades' => $unidades,
+                'unidad' => getImagenes($unidad),
+                'HttpResponse' => [
+                    'status' => 200,
+                    'statusText' => 'OK',
+                    'ok' => true
+                ]
+            ],
+        );
     }
 }
