@@ -9,7 +9,7 @@ use App\Http\Controllers\nivelesController;
 use App\Http\Controllers\paralelosController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\usuariosController;
-
+use App\Http\Controllers\noticiasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +87,9 @@ Route::delete('borrarArchivoParalelo',[paralelosController::class,'borrarArchivo
 
 Route::post('pruebas',[paralelosController::class,"pruebas"]);
 
-
+//noticias
+Route::post('subirNoticia',[noticiasController::class,"subirNoticia"]);
+Route::get('getNoticias',[noticiasController::class,"getNoticias"]);
+Route::delete('eliminarNoticia/{id}',[noticiasController::class,"eliminarNoticia"]);
 
 
