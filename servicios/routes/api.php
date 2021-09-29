@@ -36,6 +36,9 @@ Route::group([
 Route::get('getRoles', [usuariosController::class,"getRoles"]);
 Route::post('insertarUsuario', [usuariosController::class,"insertarUsuario"]);
 Route::get('getUsuarios', [usuariosController::class,"getUsuarios"]);
+Route::post('editarUsuario',[usuariosController::class,"editarUsuario2"]);
+Route::delete('eliminarUsuario/{id}',[usuariosController::class,"eliminarUsuario"]);
+
 Route::post('ingresar', [AuthController::class,"login"]);
 Route::post('register', [AuthController::class,"register"]);
 
