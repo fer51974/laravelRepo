@@ -49,7 +49,9 @@ Route::post('insertarUnidad',[UEController::class,"insertarUnidad"]);
 Route::get('getUnidades',[UEController::class,"getUnidades"]);
 Route::get('getUnidad/{id}',[UEController::class,"getUnidad"]);
 Route::delete('eliminarUnidad/{id}',[UEController::class,"eliminarUnidad"]);
+Route::post('editarUnidad',[UEController::class,"editarUnidad"]);
 Route::post('probando',[UEController::class,"prueba2"]);
+
 
 //años lectivos
 Route::get('getLectivos/{id}',[LectivoController::class,"getLectivos"]);

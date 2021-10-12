@@ -131,6 +131,63 @@ class UEController extends Controller
         }
 
     }
+    ///actualizar unidad educativa
+    public function editarUnidad(Request $request){
+        $idUnidad=$request->input('idUnidad');
+        $nombreUnidad=$request->input('nombre');
+        $direccion=$request->input('direccion');
+        $archivo=$request->file('archivo');
+        
+        $lastUnidad=unidadEducativa::where('ID','=',$idUnidad)->get();
+        try{
+            //nombre
+            if($nombreUnidad!=0){
+                $unidad=unidadEducativa::where('ID','=',$idUnidad)
+                ->update(['NOMBRE'=>$nombreUnidad]);
+            }
+            //direccion
+            if($direccion!=0){
+                $unidad=unidadEducativa::where('ID','=',$idUnidad)
+                ->update(['DIRECCION'=>$direccion]);
+            }
+            //rutalogo
+            if($archivo!=null){
+                //guardo la imagen y la nueva ruta
+                $ruta=$archivo->storeAs('unidadesEducativas/logos', $nombreUnidad . '.' . $archivo->getClientOriginalExtension(), 'public');
+                $unidad=unidadEducativa::where('ID','=',$idUnidad)
+                ->update(['RUTA_LOGO'=>$ruta]);
+                  //elimino el logo de la unidad educativa
+                  $res=Storage::disk('public')->delete('unidadesEducativas/logos/'.$lastUnidad[0]->NOMBRE.'.png');
+                  if($res!=1){
+                     $res=Storage::disk('public')->delete('unidadesEducativas/logos/'.$lastUnidad[0]->NOMBRE.'.jpg');
+                  }
+                  //actualizo el nombre de la carpeta
+                  Storage::move('public/unidadesEducativas/'.$lastUnidad[0]->NOMBRE,
+                 'public/unidadesEducativas/'.$nombreUnidad);
+            }
+            return response()->json(
+                [
+                    'HttpResponse' => [
+                        'status' => 200,
+                        'message'=>'Usuario actualizado Correctamente',
+                        'statusText' => 'OK',
+                        'ok' => true
+                    ]
+                ],
+            );
+        }catch(Exception $e){
+            return response()->json([
+                'HttpResponse' => [
+                    'tittle' => 'Error',
+                    'message' => 'Algo salio mal, intende nuevamente!',
+                    'status' => 400,
+                    'statusText' => 'error',
+                    'ok' => true
+                ]
+            ]);
+            
+        }
+    }
 
     ///obtener lista de unidades educativas 
     public function getUnidades(){
