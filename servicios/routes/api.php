@@ -10,7 +10,7 @@ use App\Http\Controllers\paralelosController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\usuariosController;
 use App\Http\Controllers\noticiasController;
-
+use App\Http\Controllers\reportes;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -97,4 +97,6 @@ Route::post('subirNoticia',[noticiasController::class,"subirNoticia"]);
 Route::get('getNoticias',[noticiasController::class,"getNoticias"]);
 Route::delete('eliminarNoticia/{id}',[noticiasController::class,"eliminarNoticia"]);
 
+//reportes
+Route::get('reporteDocumentos/{id}',[reportes::class,"reporteDocumentos"]);
 
