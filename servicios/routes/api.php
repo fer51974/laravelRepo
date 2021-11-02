@@ -99,4 +99,7 @@ Route::delete('eliminarNoticia/{id}',[noticiasController::class,"eliminarNoticia
 
 //reportes
 Route::get('reporteDocumentos/{id}',[reportes::class,"reporteDocumentos"]);
+Route::get('reporteNivel/{id}',[reportes::class,"reporteNivel"]);
+Route::get('reporteParalelo/{id}',[reportes::class,"reporteParalelo"]);
+
 
