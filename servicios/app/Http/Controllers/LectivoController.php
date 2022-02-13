@@ -167,12 +167,14 @@ class LectivoController extends Controller
         $idLectivo= $request->input('idLectivo');
         $nuevoNombre= $request->input('nombreLectivo');
         ///comprobar si no existe otro lectivo con ese nombre
+        $idUnidad = lectivo::where([
+            ['ID', '=', $idLectivo]])->first();  
+
         $lectivoExiste = lectivo::where([
-            ['ID', '=', $idLectivo],
+            ['ID_UNIDAD_EDUCATIVA', '=', $idUnidad->ID_UNIDAD_EDUCATIVA],
             ['NOMBRE','=',$nuevoNombre]])->get();  
             
         if(count($lectivoExiste)<1){
-                    ///
         $nombres = unidadEducativa::where('anio_lectivo.ID','=',$idLectivo)
         ->join('anio_lectivo','anio_lectivo.ID_UNIDAD_EDUCATIVA','=','unidad_educativa.ID')   
         ->select('unidad_educativa.NOMBRE as nombreUnidad','anio_lectivo.NOMBRE as nombreLectivo')
@@ -207,7 +209,7 @@ class LectivoController extends Controller
         }else{
             return response()->json([
                 'HttpResponse' => [
-                    'message' => 'No se puede asignar este nombre!',
+                    'message' => 'No se puede asignar este nombre! Ya existe',
                     'status' => 400,
                     'statusText' => 'error',
                     'ok' => true

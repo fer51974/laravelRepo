@@ -137,9 +137,12 @@ class paralelosController extends Controller
     public function editarParalelo(Request $request){
         $idParalelo=$request->input('idParalelo');
         $nombreParalelo=$request->input('nombreParalelo');
+        $idNivel=paralelo::where([
+            ['ID','=',$idParalelo]])->first(); 
         //comprobar si no existe otro paralelo con ese nombre
         $existe = paralelo::where([
-            ['NOMBRE','=',$nombreParalelo]])->get();  
+            ['NOMBRE','=',$nombreParalelo],
+            ['ID_NIVEL','=',$idNivel->ID_NIVEL]])->get();  
             
         if(count($existe)<1){
         //obtengo los nombres para las carpetas
@@ -178,7 +181,7 @@ class paralelosController extends Controller
 
             return response()->json([
                 'HttpResponse' => [
-                    'message' => 'No se puede asignar este nombre!',
+                    'message' => 'No se puede asignar este nombre! Ya existe',
                     'status' => 400,
                     'statusText' => 'error',
                     'ok' => true

@@ -141,7 +141,7 @@ class documentosController extends Controller
         }else{
             return response()->json([
                 'HttpResponse' => [
-                    'message' => 'No se puede asignar este nombre!',
+                    'message' => 'No se puede asignar este nombre! Ya existe',
                     'status' => 400,
                     'statusText' => 'error',
                     'ok' => true
